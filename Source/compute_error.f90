@@ -108,7 +108,7 @@ contains
        do i=lo(1),hi(1)
           ! computer error in 2 norm 
           res(i,j) =r1*( phi(i,j) -phi_exact(i,j))
-
+          !print*,i,j,phi(i,j),phi_exact(i,j)
        end do
     end do
 

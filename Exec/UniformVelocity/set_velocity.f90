@@ -144,17 +144,20 @@ contains
 
     h = .5d0*dx
 
-    do j=lo(2),hi(2)
+    do j=lo(2),hi(2)+1
        y = prob_lo(2) + (dble(j)) * dx
-       do i=lo(1),hi(1)
+       do i=lo(1),hi(1)+1
           x = prob_lo(1) + (dble(i)) * dx
 
 ! velx set x in the edge and y in the center 
-          velx(i,j) = vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y+h-vavg*time)/length))
-          vely(i,j) = vavg + 2.d0*(sin(pi2*(x+h-vavg*time)/length)*cos(pi2*(y-vavg*time)/length)) 
-
+          velx(i,j) = 1.0d0 ! vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y+h-vavg*time)/length))
+          vely(i,j) = 1.0d0 ! vavg + 2.d0*(sin(pi2*(x+h-vavg*time)/length)*cos(pi2*(y-vavg*time)/length)) 
+!          print*,i,j,x,y,velx(i,j)
        end do
     end do
+
+!  velx = 1.d0
+!  vely = 1.d0
 
   end subroutine set_velocity_2d
 
@@ -191,8 +194,8 @@ contains
        do i=lo(1),hi(1)
           x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
-          f(i,j) = pi4/length*sin(pi4*(x-vavg*time)/length)
-
+          f(i,j) = 0.d0! pi4/length*sin(pi4*(x-vavg*time)/length)
+          !print*,i,j,f(i,j)
        end do
     end do
 

@@ -91,7 +91,9 @@ contains
           x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
 ! velx set both x and y in the center 
-          phi(i,j) = vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y-vavg*time)/length))
+          phi(i,j) = sin(.5d0*pi2*x)!vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y-vavg*time)/length))
+
+!          print*,i,j,phi(i,j)
 
        end do
     end do

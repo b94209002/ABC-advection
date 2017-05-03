@@ -141,7 +141,7 @@ contains
     type(bndry_reg), intent(inout) :: bndry_flx(2:)
     real(kind=dp_t), intent(in   ) :: dx(:)
     real(kind=dp_t), intent(in   ) :: dt(:),time
-    real(kind=dp_t), intent(in   ) :: prob_lo(:)
+    real(kind=dp_t), intent(in   ) :: prob_lo(mla%dim)
     type(bc_tower) , intent(in   ) :: the_bc_tower
     integer        , intent(in   ) :: n,step
     integer        , intent(in   ) :: num_substeps
