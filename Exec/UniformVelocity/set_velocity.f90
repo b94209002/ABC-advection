@@ -135,11 +135,26 @@ contains
     double precision :: vely(lo(1)-ng:,lo(2)-ng:)
     double precision :: dx,time
     double precision :: prob_lo(2) 
+   
+    integer          :: i,j
+    double precision :: pi2,vavg,x,y,h,length
+    pi2 = 2.d0*3.14159265359d0
+    vavg = 0.d0  
+    length = 1.d0
 
-    ! Constant velocity field
-    velx = 1.d0
-    vely = 1.d0
+    h = .5d0*dx
 
+    do j=lo(2),hi(2)
+       y = prob_lo(2) + (dble(j)) * dx
+       do i=lo(1),hi(1)
+          x = prob_lo(1) + (dble(i)) * dx
+
+! velx set x in the edge and y in the center 
+          velx(i,j) = vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y+h-vavg*time)/length))
+          vely(i,j) = vavg + 2.d0*(sin(pi2*(x+h-vavg*time)/length)*cos(pi2*(y-vavg*time)/length)) 
+
+       end do
+    end do
 
   end subroutine set_velocity_2d
 
@@ -164,8 +179,25 @@ contains
     double precision :: f(lo(1)-ng:,lo(2)-ng:)
     double precision :: dx,time,prob_lo(2)
 
-    ! Constant forcing field
-    f = 0.d0
+    integer          :: i,j
+    double precision :: pi4,vavg,x,y,h,length
+    pi4 = 4.d0*3.14159265359d0
+    vavg = 0.d0
+    length = 1.d0
+
+
+    do j=lo(2),hi(2)
+       y = prob_lo(2) + (dble(j)+ .5d0) * dx
+       do i=lo(1),hi(1)
+          x = prob_lo(1) + (dble(i)+ .5d0) * dx
+
+          f(i,j) = pi4/length*sin(pi4*(x-vavg*time)/length)
+
+       end do
+    end do
+
+
+
 
   end subroutine set_forcing_2d
 

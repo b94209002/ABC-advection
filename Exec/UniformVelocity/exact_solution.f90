@@ -77,26 +77,23 @@ contains
     double precision :: prob_lo(2),prob_hi(2)
     double precision :: dx, time 
 
-    ! local varables
-    integer          :: i,j
-    double precision :: x,y,r1,pi
 
-    pi = 3.14159265359d0
+    integer          :: i,j
+    double precision :: pi2,vavg,x,y,length
+    pi2 = 2.d0*3.14159265359d0
+    vavg = 0.d0
+    length = 1.d0
+
 
     do j=lo(2),hi(2)
-       y = prob_lo(2) + (dble(j)+0.5d0) * dx! - time !velocity
-       if (y .lt. prob_lo(2)) y = y + (prob_hi(2) - prob_lo(2))
+       y = prob_lo(2) + (dble(j) + .5d0) * dx
        do i=lo(1),hi(1)
-          x = prob_lo(1) + (dble(i)+0.5d0) * dx - time  !velocity
-          if (x .lt. prob_lo(1)) x = x + (prob_hi(1) - prob_lo(1))
+          x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
-!          r1 = ((x)**2 + (y)**2) / 0.01d0
+! velx set both x and y in the center 
+          phi(i,j) = vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y-vavg*time)/length))
 
-!          phi(i,j) = 1.d0 + exp(-r1)
-
-    phi(i,j) = sin(pi*x)
-
-          end do
+       end do
     end do
 
     end subroutine exact_sol_2d
