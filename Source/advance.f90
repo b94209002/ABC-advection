@@ -22,8 +22,8 @@ module advance_module
 
 contains
 
-  subroutine advance(mla,phi_old,phi_new,velocity,force,bndry_flx,dx,dt,time,the_bc_tower, &
-                     do_subcycling,num_substeps)
+  subroutine advance(mla,phi_old,phi_new,velocity,force,bndry_flx,dx,dt,time,prob_lo, &
+                     the_bc_tower, do_subcycling,num_substeps)
 
     type(ml_layout), intent(in   ) :: mla
     type(multifab) , intent(inout) :: phi_old(:)
@@ -33,6 +33,7 @@ contains
     type(bndry_reg), intent(inout) :: bndry_flx(2:)
     real(kind=dp_t), intent(in   ) :: dx(:)
     real(kind=dp_t), intent(in   ) :: dt(:),time
+    real(kind=dp_t), intent(in   ) :: prob_lo(:)
     type(bc_tower) , intent(in   ) :: the_bc_tower
     logical        , intent(in   ) :: do_subcycling
     integer        , intent(in   ) :: num_substeps
@@ -68,7 +69,7 @@ contains
           num_steps_completed(:) = 0
           ! note that update_level is recursive
           call update_level(n,mla,phi_old,phi_new,velocity,force,bndry_flx,&
-                            dx,dt,time,the_bc_tower,istep,num_substeps, &
+                            dx,dt,time,prob_lo,the_bc_tower,istep,num_substeps, &
                             num_steps_completed)
 
     else
@@ -85,7 +86,7 @@ contains
              end do
           end do
 
-          call set_velocity(mla,velocity,dx,time+0.5d0*dt(1))
+          call set_velocity(mla,velocity,dx,time+0.5d0*dt(1),prob_lo)
           ! make sure we are not violating cfl since the time step is based
           ! on the velocity at t^n
           do n=1,nlevs
@@ -129,7 +130,7 @@ contains
   end subroutine advance
 
   recursive subroutine update_level(n,mla,phi_old,phi_new,velocity,force,bndry_flx,&
-                                    dx,dt,time,the_bc_tower,step,num_substeps, &
+                                    dx,dt,time,prob_lo,the_bc_tower,step,num_substeps, &
                                     num_steps_completed)
 
     type(ml_layout), intent(in   ) :: mla
@@ -140,6 +141,7 @@ contains
     type(bndry_reg), intent(inout) :: bndry_flx(2:)
     real(kind=dp_t), intent(in   ) :: dx(:)
     real(kind=dp_t), intent(in   ) :: dt(:),time
+    real(kind=dp_t), intent(in   ) :: prob_lo(:)
     type(bc_tower) , intent(in   ) :: the_bc_tower
     integer        , intent(in   ) :: n,step
     integer        , intent(in   ) :: num_substeps
@@ -160,8 +162,8 @@ contains
        print*,'   Advancing level: ',n,' with dt = ',dt(n)
 
     ! compute velocity at half-time level
-    call set_velocity(mla,velocity,dx,tplushalf)
-    call set_forcing(mla,force,dx,tplushalf)
+    call set_velocity(mla,velocity,dx,tplushalf,prob_lo)
+    call set_forcing(mla,force,dx,tplushalf,prob_lo)
 
     ! make sure we are not violating cfl since the time step is based
     ! on the velocity at t^n
@@ -259,7 +261,7 @@ contains
 
        do istep = 1, num_substeps
           call update_level(n+1,mla,phi_old,phi_new,velocity,force,bndry_flx,&
-                            dx,dt,time,the_bc_tower,istep,num_substeps, &
+                            dx,dt,time,prob_lo,the_bc_tower,istep,num_substeps, &
                             num_steps_completed)
        end do
 

@@ -355,7 +355,7 @@ program main
   do istep=1,nsteps
 
      ! Compute dt using the CFL condition and making sure we don't go past stop_time
-     call compute_dt(velocity,time,dt)
+     call compute_dt(velocity,time,dt,prob_lo)
 
      ! regrid
      if ( istep > 1 .and. max_levs > 1 .and. regrid_int > 0 .and. &
@@ -402,8 +402,8 @@ program main
      end if
 
      ! Advance phi by one coarse time step
-     call advance(mla,phi_old,phi_new,velocity,force,bndry_flx,dx,dt,time,the_bc_tower, &
-                  do_subcycling,num_substeps)
+     call advance(mla,phi_old,phi_new,velocity,force,bndry_flx,dx,dt,time,prob_lo, &
+                 the_bc_tower, do_subcycling,num_substeps)
 
      time = time + dt(1)
 
@@ -486,11 +486,12 @@ program main
 
 contains
 
-  subroutine compute_dt(vel,time_n,dt)
+  subroutine compute_dt(vel,time_n,dt,prob_lo)
 
       type(multifab) , intent(inout) :: vel(:,:)
       real(dp_t)     , intent(in   ) :: time_n
       real(dp_t)     , intent(inout) :: dt(:)
+      real(dp_t)     , intent(inout) :: prob_lo(:)
 
       ! Local variables
       real(dp_t)                     :: dt_old(mla%nlevel)
@@ -500,7 +501,7 @@ contains
       cfl_grow_fac = 1.1d0
 
       ! Here we set the velocity so we can find the max vel to use in setting dt
-      call set_velocity(mla,vel,dx,time_n)
+      call set_velocity(mla,vel,dx,time_n,prob_lo)
 
       vmax = -HUGE(1.d0)
       do n = 1, nlevs

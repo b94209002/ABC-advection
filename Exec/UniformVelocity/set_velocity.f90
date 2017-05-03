@@ -11,11 +11,11 @@ module set_velocity_module
 
 contains
 
-  subroutine set_velocity_on_level(velocity,dx,time)
+  subroutine set_velocity_on_level(velocity,dx,time,prob_lo)
 
     type(multifab) , intent(inout) :: velocity(:)
     real(kind=dp_t), intent(in   ) :: dx,time
-
+    real(kind=dp_t), intent(in   ) :: prob_lo(:)
     ! local
     integer :: i,dm,ng
     integer :: lo(velocity(1)%dim), hi(velocity(1)%dim)
@@ -32,11 +32,11 @@ contains
        select case(dm)
        case (2)
           call set_velocity_2d(dp1(:,:,1,1), dp2(:,:,1,1), ng, &
-                                   lo, hi, dx, time)
+                                   lo, hi, dx, time, prob_lo)
        case (3)
           dp3 => dataptr(velocity(3),i)
           call set_velocity_3d(dp1(:,:,:,1), dp2(:,:,:,1), dp3(:,:,:,1), ng, &
-                                   lo, hi, dx, time)
+                                   lo, hi, dx, time, prob_lo)
        end select
     end do
 
@@ -47,11 +47,12 @@ contains
   end subroutine set_velocity_on_level
 
 
-  subroutine set_velocity(mla,velocity,dx,time)
+  subroutine set_velocity(mla,velocity,dx,time,prob_lo)
 
     type(ml_layout), intent(in   ) :: mla
     type(multifab) , intent(inout) :: velocity(:,:)
     real(kind=dp_t), intent(in   ) :: dx(:),time
+    real(kind=dp_t), intent(in   ) :: prob_lo(:)
 
     ! local variables
     integer :: lo(mla%dim), hi(mla%dim)
@@ -74,11 +75,11 @@ contains
           select case(dm)
           case (2)
              call set_velocity_2d(dp1(:,:,1,1), dp2(:,:,1,1), ng, &
-                                      lo, hi, dx(n), time)
+                                      lo, hi, dx(n), time, prob_lo)
           case (3)
              dp3 => dataptr(velocity(n,3),i)
              call set_velocity_3d(dp1(:,:,:,1), dp2(:,:,:,1), dp3(:,:,:,1), ng, &
-                                      lo, hi, dx(n), time)
+                                      lo, hi, dx(n), time, prob_lo)
           end select
        end do
     end do
@@ -90,11 +91,12 @@ contains
     end do
 
   end subroutine set_velocity
-  subroutine set_forcing(mla,forcing,dx,time)
+  subroutine set_forcing(mla,forcing,dx,time,prob_lo)
 
     type(ml_layout), intent(in   ) :: mla
     type(multifab) , intent(inout) :: forcing(:)
     real(kind=dp_t), intent(in   ) :: dx(:),time
+    real(kind=dp_t), intent(in   ) :: prob_lo(:)
 
     ! local variables
     integer :: lo(mla%dim), hi(mla%dim)
@@ -113,9 +115,9 @@ contains
           hi = upb(get_box(forcing(n),i))
           select case(dm)
           case (2)
-             call set_forcing_2d(df(:,:,1,1), ng, lo, hi, dx(n), time)
+             call set_forcing_2d(df(:,:,1,1), ng, lo, hi, dx(n), time, prob_lo)
           case (3)
-             call set_forcing_3d(df(:,:,:,1), ng, lo, hi, dx(n), time)
+             call set_forcing_3d(df(:,:,:,1), ng, lo, hi, dx(n), time, prob_lo)
           end select
        end do
     end do
@@ -126,12 +128,13 @@ contains
 
   end subroutine set_forcing
   
-  subroutine set_velocity_2d(velx, vely, ng, lo, hi, dx, time)
+  subroutine set_velocity_2d(velx, vely, ng, lo, hi, dx, time, prob_lo)
 
     integer          :: lo(2), hi(2), ng
     double precision :: velx(lo(1)-ng:,lo(2)-ng:)
     double precision :: vely(lo(1)-ng:,lo(2)-ng:)
     double precision :: dx,time
+    double precision :: prob_lo(2) 
 
     ! Constant velocity field
     velx = 1.d0
@@ -140,13 +143,13 @@ contains
 
   end subroutine set_velocity_2d
 
-  subroutine set_velocity_3d(velx, vely, velz, ng, lo, hi, dx, time)
+  subroutine set_velocity_3d(velx, vely, velz, ng, lo, hi, dx, time, prob_lo)
 
     integer          :: lo(3), hi(3), ng
     double precision :: velx(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
     double precision :: vely(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
     double precision :: velz(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
-    double precision :: dx,time
+    double precision :: dx,time, prob_lo(3)
 
     ! Constant velocity field
     velx = 1.d0
@@ -155,22 +158,22 @@ contains
 
   end subroutine set_velocity_3d
 
-  subroutine set_forcing_2d(f, ng, lo, hi, dx, time)
+  subroutine set_forcing_2d(f, ng, lo, hi, dx, time, prob_lo)
 
     integer          :: lo(2), hi(2), ng
     double precision :: f(lo(1)-ng:,lo(2)-ng:)
-    double precision :: dx,time
+    double precision :: dx,time,prob_lo(2)
 
     ! Constant forcing field
     f = 0.d0
 
   end subroutine set_forcing_2d
 
-  subroutine set_forcing_3d(f, ng, lo, hi, dx, time)
+  subroutine set_forcing_3d(f, ng, lo, hi, dx, time,prob_lo)
 
     integer          :: lo(3), hi(3), ng
     double precision :: f(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
-    double precision :: dx,time
+    double precision :: dx,time,prob_lo(3)
 
     ! Constant forcing field
     f = 0.d0
