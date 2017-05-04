@@ -2,14 +2,14 @@
 
   dim = 2                     ! dimensionality of problem
   max_levs = 1                ! total number of AMR levels
-  plot_int = 10               ! plotfile interval
-  n_cell = 32                 ! number of cells on each side of the domain at the base level
-  max_grid_size = 16          ! max number of cells on each side of an individual grid
-  cfl = 0.5d0                 ! advective cfl
+  plot_int = 1               ! plotfile interval
+  n_cell = 64                 ! number of cells on each side of the domain at the base level
+  max_grid_size = 32          ! max number of cells on each side of an individual grid
+  cfl = 1.0d0                 ! advective cfl
 
   ! The stopping criterion will be whichever of these is reached first:
   nsteps = 1000               ! number of time steps
-  stop_time = .1d0            ! simulation stop time
+  stop_time = 0.125d0            ! simulation stop time
 
   regrid_int = 4              ! how often to regrid
   do_subcycling = T           ! use subcycling
@@ -22,8 +22,8 @@
   bc_y_hi = -1
 
   ! Set the lo and hi values of the problem domain
-  prob_lo_x =  -1.0
-  prob_lo_y =  -1.0
+  prob_lo_x =  0.0
+  prob_lo_y =  0.0
   prob_hi_x =  1.0
   prob_hi_y =  1.0
 

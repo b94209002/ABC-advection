@@ -70,6 +70,7 @@ contains
           ! note that update_level is recursive
           call update_level(n,mla,phi_old,phi_new,velocity,force,bndry_flx,&
                             dx,dt,time,prob_lo,the_bc_tower,istep,num_substeps, &
+
                             num_steps_completed)
 
     else
@@ -87,6 +88,7 @@ contains
           end do
 
           call set_velocity(mla,velocity,dx,time+0.5d0*dt(1),prob_lo)
+          call set_forcing(mla,force,dx,time+0.5d0*dt(1),prob_lo)
           ! make sure we are not violating cfl since the time step is based
           ! on the velocity at t^n
           do n=1,nlevs
@@ -117,7 +119,7 @@ contains
 !          call bds(phi_old,flux,velocity,force,dx,dt(n),1,1,1,.true.,mla)
 
           ! update phi using forward Euler discretization
-          call update_phi(mla,phi_old,phi_new,flux,dx,dt,the_bc_tower)
+          call update_phi(mla,phi_old,phi_new,flux,force,dx,dt,the_bc_tower)
 
           do n = 1,nlevs
              do i = 1, dm
@@ -229,14 +231,13 @@ contains
     end do
 
     ! Compute fluxes at level n.
-!    call compute_flux_single_level(mla,phi_old(n),velocity(n,:),flux, &
-!                                   dx(n),dt(n))
+!    call compute_flux_single_level(mla,phi_old(n),velocity(n,:),flux, dx(n),dt(n))
 
     ! Compute fluxes at level n with bds
     call bds_single_level(phi_old(n),flux,velocity(n,:),force(n),dx(n),dt(n),1,1,1,.true.,mla)
 
     ! Update solution at level n.
-    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,dx(n),dt(n))
+    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,force(n),dx(n),dt(n))
 
     if (n .gt. 1) then
        ! Copy fine fluxes from cell boundaries into boundary registers for use in refluxing.

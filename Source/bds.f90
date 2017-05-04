@@ -297,7 +297,7 @@ contains
           ! sxy
           slope(i,j,3) = ( sint(i+1,j+1) - sint(i+1,j  ) &
                           -sint(i  ,j+1) + sint(i  ,j  ) ) / (hx*hy)
-
+          if (.false.) then
           ! ++ / sint(i+1,j+1)
           sc(4) = s(i,j) + 0.5d0*(hx*slope(i,j,1) + hy*slope(i,j,2))  &
                + 0.25d0*hx*hy*slope(i,j,3)
@@ -389,6 +389,8 @@ contains
           slope(i,j,3) = ( sc(1) + sc(4) &
                           -sc(2) - sc(3) ) / (hx*hy)
 
+
+          endif
        enddo
     enddo
 
