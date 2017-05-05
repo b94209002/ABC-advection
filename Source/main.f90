@@ -341,8 +341,8 @@ program main
 
   call exact_sol(mla,phi_exact,prob_lo,prob_hi, dx,time)
   ! Write plotfile at t=0
-  call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
-!  call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
+!  call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
+  call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
 
   ! Build the bndry_reg multifabs which will store the flux information from the
   !       fine grids at the coarse restion.
@@ -418,8 +418,8 @@ program main
      ! Write plotfile after every plot_int time steps, or if the simulation is done.
      if (plot_int .gt. 0) then
         if (mod(istep,plot_int) .eq. 0 .or. istep .eq. nsteps .or. time .ge. stop_time) then
-!           call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
-           call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
+           call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
+!           call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
         end if
      end if
 

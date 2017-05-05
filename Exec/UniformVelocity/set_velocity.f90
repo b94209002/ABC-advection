@@ -137,8 +137,8 @@ contains
     double precision :: prob_lo(2) 
 
     ! Constant velocity field
-    velx = 1.d0
-    vely = 1.d0
+    velx = -1.d0
+    vely = -1.d0
 
 
   end subroutine set_velocity_2d

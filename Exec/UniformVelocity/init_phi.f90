@@ -102,11 +102,11 @@ contains
        do i=lo(1),hi(1)
           x = prob_lo(1) + (dble(i)+0.5d0) * dx
 
-!          r1 = ((x-0.d0)**2 + (y-0.d0)**2) / 0.01d0
+          r1 = ((x-0.d0)**2 + (y-0.d0)**2) / 0.01d0
 
-!          phi(i,j) = 1.d0 + exp(-r1)
+          phi(i,j) = 1.d0 + exp(-r1)
 
-           phi(i,j) = sin(pi*x)
+!           phi(i,j) = sin(pi*x)
 
        end do
     end do

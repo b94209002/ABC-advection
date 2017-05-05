@@ -236,7 +236,8 @@ contains
     call bds_single_level(phi_old(n),flux,velocity(n,:),force(n),dx(n),dt(n),1,1,1,.true.,mla)
 
     ! Update solution at level n.
-    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,dx(n),dt(n))
+!    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,dx(n),dt(n))
+    call update_bds_phi_single_level(mla,phi_old(n),phi_new(n),flux,velocity(n,:),dx(n),dt(n))
 
     if (n .gt. 1) then
        ! Copy fine fluxes from cell boundaries into boundary registers for use in refluxing.
