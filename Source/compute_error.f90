@@ -87,7 +87,7 @@ contains
        
     end do
 
-    error = norm_l2(res)
+    error = norm_inf(res)
     call multifab_destroy(res)
 
   end subroutine compute_error
@@ -106,8 +106,12 @@ contains
 
     do j=lo(2),hi(2)
        do i=lo(1),hi(1)
-          ! computer error in 2 norm 
+          ! compute error in 2 norm 
           res(i,j) =r1*( phi(i,j) -phi_exact(i,j))
+          ! compute error in inf-norm            
+          ! res(i,j) = abs(phi(i,j) - phi_exact(i,j))
+
+          ! if (res(i,j) .gt. 1.d0) Print*,i,j,phi(i,j),phi_exact(i,j)
           !print*,i,j,phi(i,j),phi_exact(i,j)
        end do
     end do

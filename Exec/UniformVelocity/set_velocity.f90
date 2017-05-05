@@ -139,7 +139,7 @@ contains
     integer          :: i,j
     double precision :: pi2,vavg,x,y,h,length
     pi2 = 2.d0*3.14159265359d0
-    vavg = 0.d0  
+    vavg = 2.d0  
     length = 1.d0
 
     h = .5d0*dx
@@ -194,7 +194,7 @@ contains
     integer          :: i,j
     double precision :: pi4,vavg,x,y,h,length
     pi4 = 4.d0*3.14159265359d0
-    vavg = 0.d0
+    vavg = 2.d0
     length = 1.d0
 
 
@@ -203,7 +203,7 @@ contains
        do i=lo(1)-1,hi(1)+1
           x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
-          f(i,j) =  -1.d0*pi4/length*sin(pi4*(x-vavg*time)/length)
+          f(i,j) = -1.d0*pi4/length*sin(pi4*(x-vavg*time)/length)
           !print*,i,j,f(i,j)
        end do
     end do

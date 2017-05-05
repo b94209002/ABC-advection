@@ -22,7 +22,9 @@ contains
     integer :: lo(exact_phi(1)%dim), hi(exact_phi(1)%dim)
 
     real(kind=dp_t), pointer :: df(:,:,:,:)
-    
+   
+    ng = exact_phi(1)%ng
+ 
     do i=1,nfabs(exact_phi(1))
        df => dataptr(exact_phi(1),i)
        lo = lwb(get_box(exact_phi(1),i))
@@ -81,7 +83,7 @@ contains
     integer          :: i,j
     double precision :: pi2,vavg,x,y,length
     pi2 = 2.d0*3.14159265359d0
-    vavg = 0.d0
+    vavg = 2.d0
     length = 1.d0
 
 
@@ -91,7 +93,7 @@ contains
           x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
 ! velx set both x and y in the center 
-          phi(i,j) = vavg - 2.d0*(cos(pi2*(x-vavg*time)/length)*sin(pi2*(y-vavg*time)/length))
+          phi(i,j) = vavg - 2.d0*cos(pi2*(x-vavg*time)/length)*sin(pi2*(y-vavg*time)/length)
 
 !          print*,i,j,phi(i,j)
 

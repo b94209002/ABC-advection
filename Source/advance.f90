@@ -161,7 +161,7 @@ contains
 
     ! We only want one processor to write to screen
     if ( parallel_IOProcessor() ) &
-       print*,'   Advancing level: ',n,' with dt = ',dt(n)
+       print*,'   Advancing level: ',n,' with dt = ',dt(n), 't_1/2  = ', 0.5d0+num_steps_completed(n) 
 
     ! compute velocity at half-time level
     call set_velocity(mla,velocity,dx,tplushalf,prob_lo)
@@ -237,7 +237,7 @@ contains
     call bds_single_level(phi_old(n),flux,velocity(n,:),force(n),dx(n),dt(n),1,1,1,.true.,mla)
 
     ! Update solution at level n.
-!    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,dx(n),dt(n))
+!    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,force(n),dx(n),dt(n))
     call update_bds_phi_single_level(mla,phi_old(n),phi_new(n),flux,velocity(n,:),force(n),dx(n),dt(n))
 
     if (n .gt. 1) then

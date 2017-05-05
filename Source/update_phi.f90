@@ -154,6 +154,7 @@ contains
     ng_p = phi_old%ng
     ng_f = flux(1)%ng
     ng_v = velocity(1)%ng
+    ng_s = source%ng
 
     do i=1,nfabs(phi_old)
        po  => dataptr(phi_old,i)
