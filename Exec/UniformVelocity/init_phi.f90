@@ -104,6 +104,7 @@ contains
        do i=lo(1),hi(1)
           x = prob_lo(1) + (dble(i)+ .5d0) * dx
 
+
 ! velx set both x and y in the center and set time = 0 
           phi(i,j) =  vavg - 2.d0*(cos(pi2*x/length)*sin(pi2*y/length))
           !print*,i,j, phi(i,j),x,y
