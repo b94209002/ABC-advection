@@ -178,10 +178,57 @@ contains
     double precision :: velz(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
     double precision :: dx,time, prob_lo(3)
 
+    integer          :: i,j,k
+    double precision :: pi2,vavg,x,y,z,length
+    pi2 = 2.d0*3.14159265359d0
+    vavg = 2.d0
+    length = 1.d0
+
+    do k=lo(3)-1,hi(3)+1
+       z = prob_lo(3) + (dble(k) + .5d0) * dx - vavg*time
+       do j=lo(2)-1,hi(2)+1
+          y = prob_lo(2) + (dble(j) + .5d0) * dx - vavg*time
+          do i=lo(1)-1,hi(1)+2
+             x = prob_lo(1) + (dble(i)) * dx - vavg*time
+
+! velx set x in the edge and y,z in the center 
+             velx(i,j,k) = vavg - 2.d0*cos(pi2*x/length)*sin(pi2*y/length)*sin(pi2*z/length)
+!          print*,i,j,x,y,velx(i,j)
+          end do
+       end do
+    end do
+    do k=lo(3)-1,hi(3)+1
+       z = prob_lo(3) + (dble(k) + .5d0) * dx - vavg*time
+       do j=lo(2)-1,hi(2)+2
+          y = prob_lo(2) + (dble(j)) * dx - vavg*time
+          do i=lo(1)-1,hi(1)+1
+             x = prob_lo(1) + (dble(i) + .5d0) * dx - vavg*time
+
+! velx set y in the edge and z,x in the center 
+             vely(i,j,k) = vavg + 2.d0*sin(pi2*x/length)*cos(pi2*y/length)*sin(pi2*z/length)
+!          print*,i,j,x,y,velx(i,j)
+          end do
+       end do
+    end do
+
+   do k=lo(3)-1,hi(3)+2
+       z = prob_lo(3) + (dble(k)) * dx - vavg*time
+       do j=lo(2)-1,hi(2)+1
+          y = prob_lo(2) + (dble(j) + .5d0) * dx - vavg*time
+          do i=lo(1)-1,hi(1)+1
+             x = prob_lo(1) + (dble(i) + .5d0) * dx - vavg*time
+    
+! velx set z in the edge and x,y in the center 
+             velz(i,j,k) = vavg + 0.d0*sin(pi2*x/length)*sin(pi2*y/length)*cos(pi2*z/length)
+!          print*,i,j,x,y,velx(i,j)
+          end do
+       end do
+    end do
+
     ! Constant velocity field
-    velx = 2.d0
-    vely = 2.d0
-    velz = 2.d0
+    ! velx = 2.d0
+    ! vely = 2.d0
+    ! velz = 2.d0
 
   end subroutine set_velocity_3d
 
@@ -216,8 +263,28 @@ contains
     double precision :: f(lo(1)-ng:,lo(2)-ng:,lo(3)-ng:)
     double precision :: dx,time,prob_lo(3)
 
+    integer          :: i,j,k
+    double precision :: pi4,vavg,x,y,z,length
+    pi4 = 4.d0*3.14159265359d0
+    vavg = 2.d0
+    length = 1.d0
+
+
+    do k=lo(3)-1,hi(3)+1
+       z = prob_lo(3) + (dble(k) + .5d0) * dx - vavg*time
+       do j=lo(2)-1,hi(2)+1
+          y = prob_lo(2) + (dble(j) + .5d0) * dx - vavg*time
+          do i=lo(1)-1,hi(1)+1
+             x = prob_lo(1) + (dble(i) + .5d0) * dx - vavg*time
+! velx set x in the edge and y,z in the center 
+             f(i,j,k) = - 1.d0*pi4*sin(pi4*x/length)*sin(.5d0*pi4*z/length)**2
+!          print*,i,j,x,y,velx(i,j)
+           end do
+       end do
+    end do
+
     ! Constant forcing field
-    f = 0.d0
+    ! f = 0.d0
 
   end subroutine set_forcing_3d
 
