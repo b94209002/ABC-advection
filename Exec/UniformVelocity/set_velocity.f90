@@ -179,9 +179,9 @@ contains
     double precision :: dx,time, prob_lo(3)
 
     ! Constant velocity field
-    velx = 1.d0
-    vely = 1.d0
-    velz = 1.d0
+    velx = 2.d0
+    vely = 2.d0
+    velz = 2.d0
 
   end subroutine set_velocity_3d
 

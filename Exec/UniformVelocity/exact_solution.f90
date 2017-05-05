@@ -112,21 +112,22 @@ contains
     ! local varables
     integer          :: i,j,k
     double precision :: x,y,z,r1,tmp
+    double precision :: pi2,vavg,length
+    pi2 = 2.d0*3.14159265359d0
+    vavg = 2.d0
+    length = 1.d0
+
+
 
     !$omp parallel do private(i,j,k,x,y,z,r1)
     do k=lo(3),hi(3)
-       z = prob_lo(3) + (dble(k)+0.5d0) * dx - time  !velocity
-       if (z .lt. prob_lo(3)) z = z + (prob_hi(3) - prob_lo(3))
+       z = prob_lo(3) + (dble(k)+0.5d0) * dx - time*vavg  !velocity
        do j=lo(2),hi(2)
-          y = prob_lo(2) + (dble(j)+0.5d0) * dx - time !velocity
-          if (y .lt. prob_lo(2)) y = y + (prob_hi(2) - prob_lo(2))
+          y = prob_lo(2) + (dble(j)+0.5d0) * dx - time*vavg !velocity
           do i=lo(1),hi(1)
-             x = prob_lo(1) + (dble(i)+0.5d0) * dx - time !velocity
-             if (x .lt. prob_lo(1)) x = x + (prob_hi(1) - prob_lo(1))
+             x = prob_lo(1) + (dble(i)+0.5d0) * dx - time*vavg !velocity
 
-             r1 = ((x)**2 + (y)**2 + (z)**2) / 0.01d0
-
-             phi(i,j,k) = 1.d0 + exp(-r1)
+             phi(i,j,k) =  vavg - 2.d0*cos(pi2*x/length)*sin(pi2*y/length)*sin(pi2*z/length)
 
           end do
        end do
