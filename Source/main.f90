@@ -418,8 +418,8 @@ program main
      ! Write plotfile after every plot_int time steps, or if the simulation is done.
      if (plot_int .gt. 0) then
         if (mod(istep,plot_int) .eq. 0 .or. istep .eq. nsteps .or. time .ge. stop_time) then
-!           call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
-           call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
+           call write_plotfile(mla,phi_new,istep,dx,time,prob_lo,prob_hi)
+!           call write_plotfile(mla,phi_exact,istep,dx,time,prob_lo,prob_hi)
         end if
      end if
 

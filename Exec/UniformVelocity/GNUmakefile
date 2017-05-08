@@ -6,7 +6,7 @@ NDEBUG    := t
 MPI       := t
 OMP       :=
 PROF      :=
-COMP      := gfortran
+COMP      := Intel
 MKVERBOSE := t
 
 include $(AMREX_HOME)/Tools/F_mk/GMakedefs.mak
