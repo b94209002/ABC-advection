@@ -44,7 +44,7 @@ contains
           call compute_error_3d(dp(:,:,:,1), de(:,:,:,1), dr(:,:,:,1), ng, lo, hi, dx)
        end select
     end do
-    error = norm_l2(res)
+    error = norm_inf(res)
 
     call multifab_destroy(res)
 
@@ -129,7 +129,7 @@ contains
     double precision :: r1
 
     !$omp parallel do private(i,j,k,r1)
-    r1 = dx*dx*dx
+    r1 = 1.d0! dx*dx*dx
     do k=lo(3),hi(3)
        do j=lo(2),hi(2)
           do i=lo(1),hi(1)

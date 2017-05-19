@@ -277,7 +277,7 @@ contains
           do i=lo(1)-1,hi(1)+1
              x = prob_lo(1) + (dble(i) + .5d0) * dx - vavg*time
 ! velx set x in the edge and y,z in the center 
-             f(i,j,k) = 0.d0 !- 1.d0*pi4*sin(pi4*x/length)*sin(.5d0*pi4*z/length)**2
+             f(i,j,k) = - 1.d0*pi4*sin(pi4*x/length)*sin(.5d0*pi4*z/length)**2
 !          print*,i,j,x,y,velx(i,j)
            end do
        end do

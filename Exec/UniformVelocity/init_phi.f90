@@ -138,9 +138,9 @@ contains
           do i=lo(1),hi(1)
              x = prob_lo(1) + (dble(i)+0.5d0) * dx
 
-!             phi(i,j,k) =  vavg - 2.d0*cos(pi2*x/length)*sin(pi2*y/length)*sin(pi2*z/length)
+             phi(i,j,k) =  vavg - 2.d0*cos(pi2*x/length)*sin(pi2*y/length)*sin(pi2*z/length)
 
-              phi(i,j,k) = (sin(.5d0*pi2*x)*sin(.5d0*pi2*y)*sin(.5d0*pi2*z))**100
+!              phi(i,j,k) = (sin(.5d0*pi2*x)*sin(.5d0*pi2*y)*sin(.5d0*pi2*z))**100
 
           end do
        end do
