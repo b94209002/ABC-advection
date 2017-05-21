@@ -161,7 +161,7 @@ contains
 
     ! We only want one processor to write to screen
     if ( parallel_IOProcessor() ) &
-       print*,'   Advancing level: ',n,' with dt = ',dt(n), 't_1/2  = ', 0.5d0+num_steps_completed(n) 
+       print*,'   Advancing level: ',n,' with dt = ',dt(n) 
 
     ! compute velocity at half-time level
     call set_velocity(mla,velocity,dx,tplushalf,prob_lo)
@@ -234,7 +234,8 @@ contains
 !    call compute_flux_single_level(mla,phi_old(n),velocity(n,:),flux, dx(n),dt(n))
 
     ! Compute fluxes at level n with bds
-    call bds_single_level(phi_old(n),flux,velocity(n,:),force(n),dx(n),dt(n),1,1,1,.true.,mla)
+    call bds_single_level(n,phi_old(n),flux,velocity(n,:),force(n),dx(n),dt(n),1,1,1,.true.,mla)
+
 
     ! Update solution at level n.
 !    call update_phi_single_level(mla,phi_old(n),phi_new(n),flux,force(n),dx(n),dt(n))
@@ -243,7 +244,8 @@ contains
     if (n .gt. 1) then
        ! Copy fine fluxes from cell boundaries into boundary registers for use in refluxing.
        scale = -dt(n)*dx(n)**(dm-1) ! -dt*area
-       call flux_reg_fine_add(bndry_flx(n),flux,scale)
+! no sync for test
+!       call flux_reg_fine_add(bndry_flx(n),flux,scale)
     end if
 
     if (n .eq. mla%nlevel) then ! finest level
@@ -255,7 +257,8 @@ contains
     else  ! Now recursively update the next finer level
 
        scale = dt(n)*dx(n)**(dm-1) ! dt*area
-       call flux_reg_crse_init(bndry_flx(n+1), flux, scale)
+! no sync for test
+!       call flux_reg_crse_init(bndry_flx(n+1), flux, scale)
 
        do i = 1, dm
           call multifab_destroy(flux(i))
@@ -272,11 +275,12 @@ contains
 
        ! note that bndry_flx contains sum_{fine}{flux*dt*area} - {flux*dt*area}_crse 
        scale = 1.d0/dx(n)**dm ! 1/volume 
-       call reflux(phi_new(n),bndry_flx(n+1),scale)
+! no sync for test 
+!       call reflux(phi_new(n),bndry_flx(n+1),scale)
 
        ! Average the level (n+1) phi down onto level n. This overwrites all
        !     previous values of phi at level n under level (n+1) grids.
-       call ml_cc_restriction_c(phi_new(n),1,phi_new(n+1),1,mla%mba%rr(n,:),1)
+!       call ml_cc_restriction_c(phi_new(n),1,phi_new(n+1),1,mla%mba%rr(n,:),1)
     end if
 
     num_steps_completed(n) = num_steps_completed(n)+1

@@ -133,12 +133,13 @@ contains
 
   end subroutine bds
 
-  subroutine bds_single_level(s,sedge,umac,force,dx,dt, &
+  subroutine bds_single_level(nlv,s,sedge,umac,force,dx,dt, &
                  start_scomp,start_bccomp,num_comp,is_conservative,mla)
 
 !  subroutine bds(s,sedge,umac,force,dx,dt,is_vel,the_bc_level, &
 !                 start_scomp,start_bccomp,num_comp,is_conservative,mla)
 
+    integer        , intent(in   ) :: nlv
     type(multifab) , intent(in   ) :: s
     type(multifab) , intent(inout) :: sedge(:)
     type(multifab) , intent(in   ) :: umac(:)
@@ -180,7 +181,7 @@ contains
        ! component 1 = slx
        ! component 2 = sly
        ! component 3 = slxy
-       call multifab_build(slope,mla%la(1),3,1)
+       call multifab_build(slope,mla%la(nlv),3,1)
     else if (dm .eq. 3) then
        ! 7 components and 1 ghost cell
        ! component 1 = slx
@@ -190,7 +191,7 @@ contains
        ! component 5 = slxz
        ! component 6 = slyz
        ! component 7 = slxyz
-       call multifab_build(slope,mla%la(1),7,1)
+       call multifab_build(slope,mla%la(nlv),7,1)
     end if
 
     ng_s = s%ng
@@ -198,7 +199,6 @@ contains
     ng_u = umac(1)%ng
     ng_f = force%ng
     ng_se = sedge(1)%ng
-
     do comp=start_scomp,start_scomp+num_comp-1
        do i = 1, nfabs(s)
           sop    => dataptr(s, i)
@@ -236,6 +236,7 @@ contains
           end select
        end do ! loop over boxes
     end do ! loop over components
+
 
     call multifab_destroy(slope)
 

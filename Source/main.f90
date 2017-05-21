@@ -254,6 +254,9 @@ program main
   ! build the level 1 multifab with 1 component and 3 ghost cells
   call multifab_build(phi_new(1),la_array(1),1,3)
 
+  ! set value for refinement tests 
+  call setval(phi_new(1),2.d0,all = .true.)
+
   ! define level 1 of the_bc_tower
   call bc_tower_level_build(the_bc_tower,1,la_array(1))
 
@@ -279,7 +282,10 @@ program main
 
         ! Build the level nl+1 data
         call multifab_build(phi_new(nl+1),la_array(nl+1),1,3)
-        
+
+        ! set value for refinement tests 
+        call setval(phi_new(nl+1),2.d0,all = .true.)        
+
         ! define level nl+1 of the_bc_tower
         call bc_tower_level_build(the_bc_tower,nl+1,la_array(nl+1))
 
@@ -346,11 +352,13 @@ program main
 
   ! Build the bndry_reg multifabs which will store the flux information from the
   !       fine grids at the coarse restion.
-  allocate(bndry_flx(2:nlevs))
+  allocate(bndry_flx(2:nlevs)) 
+  if (.false.) then
   do n = 2, nlevs
      call flux_reg_build(bndry_flx(n),mla%la(n),mla%la(n-1),mla%mba%rr(n-1,:), &
                          ml_layout_get_pd(mla,n-1),nc=1)
   end do
+  endif
 
   do istep=1,nsteps
 
@@ -358,6 +366,7 @@ program main
      call compute_dt(velocity,time,dt,prob_lo)
 
      ! regrid
+     if (.false.) then  ! no regrid
      if ( istep > 1 .and. max_levs > 1 .and. regrid_int > 0 .and. &
           (mod(istep-1,regrid_int) .eq. 0) ) then
 
@@ -394,6 +403,7 @@ program main
         end do
 
      end if
+     endif
 
      ! we only want one processor to write to screen
      if ( parallel_IOProcessor() ) then
@@ -407,8 +417,11 @@ program main
 
      time = time + dt(1)
 
-     call exact_sol(mla,phi_exact,prob_lo,prob_hi, dx,time)
-     call compute_error(res, mla,phi_new,phi_exact,dx)
+!     call exact_sol(mla,phi_exact,prob_lo,prob_hi, dx,time)
+!     call compute_error(res, mla,phi_new,phi_exact,dx)
+
+     call compute_error_from_refinement(res, mla,phi_new,dx)
+ 
      if ( parallel_IOProcessor() ) then
         print*,'  '
         print*,' STEP = ', istep, ' TIME = ',time, ' DT = ',dt(1),' Res = ', res

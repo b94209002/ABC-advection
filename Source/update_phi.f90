@@ -120,7 +120,7 @@ contains
     ! restrict the multi-level data, and
     ! fill all boundaries: same-level, coarse-fine, periodic, and domain
     ! boundaries 
-    call ml_restrict_and_fill(nlevs, phi_new, mla%mba%rr, the_bc_tower%bc_tower_array)
+!    call ml_restrict_and_fill(nlevs, phi_new, mla%mba%rr, the_bc_tower%bc_tower_array)
 
   end subroutine update_bds_phi
 
